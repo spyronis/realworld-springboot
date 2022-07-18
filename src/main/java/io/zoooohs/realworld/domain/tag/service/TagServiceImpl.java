@@ -15,6 +15,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<String> listOfTags() {
-        return tagRepository.findAll().stream().map(ArticleTagRelationEntity::getTag).distinct().collect(Collectors.toList());
+        return tagRepository.findAll().stream()
+                .map(ArticleTagRelationEntity::getTag)
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

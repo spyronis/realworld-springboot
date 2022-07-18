@@ -54,7 +54,7 @@ public class ArticleServiceImpl implements ArticleService {
                 .author(author)
                 .build();
         List<ArticleTagRelationEntity> tagList = new ArrayList<>();
-        for (String tag: article.getTagList()) {
+        for (String tag: article.getTagList().split(",")) {
             tagList.add(ArticleTagRelationEntity.builder().article(articleEntity).tag(tag).build());
         }
         articleEntity.setTagList(tagList);
@@ -89,14 +89,18 @@ public class ArticleServiceImpl implements ArticleService {
                 .updatedAt(entity.getUpdatedAt())
                 .favorited(favorited)
                 .favoritesCount(favoritesCount)
-                .tagList(entity.getTagList().stream().map(ArticleTagRelationEntity::getTag).collect(Collectors.toList()))
+                .tagList(entity.getTagList().stream().map(ArticleTagRelationEntity::getTag).collect(Collectors.joining(",")))
                 .build();
     }
 
     @Transactional
     @Override
     public ArticleDto updateArticle(String slug, ArticleDto.Update article, UserDto.Auth authUser) {
-        ArticleEntity found = articleRepository.findBySlug(slug).filter(entity -> entity.getAuthor().getId().equals(authUser.getId())).orElseThrow(() -> new AppException(Error.ARTICLE_NOT_FOUND));
+
+        ArticleEntity found = articleRepository
+                .findBySlug(slug)
+                .filter(entity -> entity.getAuthor().getId().equals(authUser.getId()))
+                .orElseThrow(() -> new AppException(Error.ARTICLE_NOT_FOUND));
 
         if (article.getTitle() != null) {
             String newSlug = String.join("-", article.getTitle().split(" "));

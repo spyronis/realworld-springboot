@@ -89,7 +89,7 @@ public class UserServiceImplTest {
 
         when(jwtUtils.encode(anyString())).thenReturn("token.test.needed");
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(userEntity));
-        when(passwordEncoder.matches(eq(login.getPassword()), eq(userEntity.getPassword()))).thenReturn(true);
+        //when(passwordEncoder.matches(eq(login.getPassword()), eq(userEntity.getPassword()))).thenReturn(true);
 
         UserDto actual = userService.login(login);
 

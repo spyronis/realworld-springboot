@@ -58,7 +58,8 @@ public class CommentServiceImplTest {
                 .title("article title")
                 .description("description")
                 .body("hi there")
-                .tagList(List.of("tag1", "tag2"))
+                //.tagList(List.of("tag1", "tag2"))
+                .tagList("tag1,tag2")
                 .favoritesCount(0L)
                 .favorited(false)
                 .build();

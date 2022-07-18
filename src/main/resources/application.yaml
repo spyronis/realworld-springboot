@@ -1,9 +1,33 @@
 server:
   servlet:
-    context-path: /api
+        context-path: /api
 
 realworld:
   auth:
     token:
       sign-key: signKey012345678901234567890123456789
       valid-time: 3000000
+
+spring:
+  h2:
+    console.enabled: true
+    console.path: /h2-console
+    console.settings.trace: false
+    spring.h2.console.settings.web-allow-others: false
+
+  datasource:
+    name: realWorldDB
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+    # change volatile behavior by using file-based storage
+    url: jdbc:h2:file:~/realWorldDB
+    #;AUTO_SERVER=TRUE
+
+
+    #;DB_CLOSE_ON_EXIT=FALSE;IFEXISTS=TRUE;DB_CLOSE_DELAY=-1;
+
+  jpa:
+    spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update

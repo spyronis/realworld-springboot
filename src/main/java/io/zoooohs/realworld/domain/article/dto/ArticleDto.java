@@ -20,7 +20,8 @@ public class ArticleDto {
     private String description;
     @NotNull
     private String body;
-    private List<String> tagList;
+    //private List<String> tagList;
+    private String tagList;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

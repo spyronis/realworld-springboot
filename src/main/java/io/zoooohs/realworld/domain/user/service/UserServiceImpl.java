@@ -20,8 +20,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto registration(final UserDto.Registration registration) {
-        userRepository.findByNameOrEmail(registration.getName(), registration.getEmail()).stream().findAny().ifPresent(entity -> {throw new AppException(Error.DUPLICATED_USER);});
-        UserEntity userEntity = UserEntity.builder().name(registration.getName()).email(registration.getEmail()).password(passwordEncoder.encode(registration.getPassword())).bio("").build();
+
+        userRepository.findByNameOrEmail(registration.getName(), registration.getEmail())
+                .stream()
+                .findAny()
+                .ifPresent(entity -> {throw new AppException(Error.DUPLICATED_USER);});
+
+        UserEntity userEntity = UserEntity.builder()
+                .name(registration.getName())
+                .email(registration.getEmail())
+                .password(passwordEncoder.encode(registration.getPassword()))
+                .bio("")
+                .build();
+
         userRepository.save(userEntity);
         return convertEntityToDto(userEntity);
     }
@@ -29,12 +40,26 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public UserDto login(UserDto.Login login) {
-        UserEntity userEntity = userRepository.findByEmail(login.getEmail()).filter(user -> passwordEncoder.matches(login.getPassword(), user.getPassword())).orElseThrow(() -> new AppException(Error.LOGIN_INFO_INVALID));
+
+
+        final String email = login.getEmail();
+        final String password = login.getPassword();
+
+        final UserEntity userEntity = userRepository.findByEmail(email)
+                .filter(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElseThrow(() -> new AppException(Error.LOGIN_INFO_INVALID));
+
         return convertEntityToDto(userEntity);
     }
 
     private UserDto convertEntityToDto(UserEntity userEntity) {
-        return UserDto.builder().name(userEntity.getName()).bio(userEntity.getBio()).email(userEntity.getEmail()).image(userEntity.getImage()).token(jwtUtils.encode(userEntity.getUsername())).build();
+        return UserDto.builder()
+                .name(userEntity.getName())
+                .bio(userEntity.getBio())
+                .email(userEntity.getEmail())
+                .image(userEntity.getImage())
+                .token(jwtUtils.encode(userEntity.getUsername()))
+                .build();
     }
 
     @Transactional(readOnly = true)
